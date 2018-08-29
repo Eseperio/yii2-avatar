@@ -1,0 +1,21 @@
+{
+    "name": "eseperio/yii2-avatar",
+    "description": "Avatar management module",
+    "type": "library",
+    "require": {
+        "yiisoft/yii2": "2.0.15.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "E.Alamo",
+            "email": "erosdelalamo@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "eseperio\\avatar\\": "./src/"
+        }
+    }
+}
