@@ -2,9 +2,6 @@
     "name": "eseperio/yii2-avatar",
     "description": "Avatar management module",
     "type": "library",
-    "require": {
-        "yiisoft/yii2": "2.0.15.1"
-    },
     "license": "MIT",
     "authors": [
         {
