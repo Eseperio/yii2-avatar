@@ -16,6 +16,7 @@ You can configure it via widget through `pluginOptions`
 There are many events available in the plugin. All events must return a boolean
 and have access to all the params of the parent function. See code to know more.
 
+#### Available events in jQuery plugin
 |Name|Description|
 |----|-----------|
 |beforeUpload|Triggered on the beforeSend event|
