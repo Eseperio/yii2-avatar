@@ -4,6 +4,7 @@
   "type": "library",
   "license": "MIT",
   "require": {
+    "php": ">=7.1.0",
     "yiisoft/yii2-imagine": "2.1.1"
   },
   "authors": [
