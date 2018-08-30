@@ -3,7 +3,6 @@
 namespace eseperio\avatar\widgets;
 
 use eseperio\avatar\assets\AvatarAsset;
-use eseperio\avatar\models\UploadForm;
 use eseperio\avatar\traits\ModuleAwareTrait;
 use yii\helpers\Json;
 use yii\helpers\Url;
@@ -31,9 +30,9 @@ class Avatar extends \yii\base\Widget
     {
 
         $this->registerAssets();
+
         return $this->render('avatar', [
             'attribute' => $this->attributeName,
-            'model' => new UploadForm(),
             'id' => $this->id
 
         ]);
