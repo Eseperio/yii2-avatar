@@ -23,7 +23,7 @@
                 this.attachEvents();
             },
             get: function (query) {
-                return $this._el.find(query);
+                return this._el.find(query);
             },
             trigger: function (event, ...params) {
                 if (typeof settings[event] === "function") {
@@ -33,9 +33,10 @@
             },
             attachEvents: function () {
                 let self = this;
-                let input = this.get('input[type="file"]');
-                $(document).on('change', input, function (e) {
-                    let o = $(this);
+
+                this._el.on('change', 'input[type="file"]', function (e) {
+                    let o = $(e.currentTarget);
+                    console.log(o);
                     let formData = new FormData();
                     formData.append(settings.attributeName, o[0].files[0]);
                     $.ajax({
@@ -45,7 +46,7 @@
                         contentType: false,
                         processData: false,
                         beforeSend: function beforeSend(jqXHR, settings) {
-                            self.el.addClass('loading');
+                            self._el.addClass('loading');
                             return self.trigger(BEFORE_UPLOAD);
 
                         }
@@ -64,10 +65,10 @@
                                 alert(data.error);
                             }
                         }
-                        self.el.removeClass('loading');
+                        self._el.removeClass('loading');
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         if (self.trigger(AJAX_FAIL, jqXHR, textStatus, errorThrown)) {
-                            self.el.removeClass('loading');
+                            self._el.removeClass('loading');
                             alert('A problem ocurred updating your profile picture');
                         }
                     });

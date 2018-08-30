@@ -4,13 +4,14 @@ namespace eseperio\avatar\assets;
 
 use yii\web\AssetBundle;
 use yii\web\JqueryAsset;
+use yii\widgets\ActiveFormAsset;
 
 class AvatarAsset extends AssetBundle
 {
     public $sourcePath = __DIR__ . "/dist";
 
     public $js = [
-        'js/change-avatar.min.js'
+        'js/change-avatar.js'
     ];
 
     public $css = [
@@ -18,6 +19,7 @@ class AvatarAsset extends AssetBundle
     ];
 
     public $depends = [
-        JqueryAsset::class
+        JqueryAsset::class,
+        ActiveFormAsset::class
     ];
 }
