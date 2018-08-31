@@ -18,5 +18,8 @@
  */
 return [
     'A problem ocurred uploading your picture. Contact administrator' => '',
+    'An error ocurred deleting your file' => '',
     'Change' => '',
+    'Remove' => '',
+    'Remove avatar permanently? This can not be undone.' => '',
 ];

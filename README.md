@@ -1,5 +1,5 @@
 # yii2-avatar
-**IMPORTANT, THIS IS WIP.**
+**0.0.1 ALPHA**
 
 Module to upload custom avatar picture
 
@@ -11,7 +11,47 @@ It must not be dependent from another user management library.
 
 ## Usage
 
+Add the module to your configuration like follows:
+```php
+'modules' => [
+'avatar' => [
+'class' => 'eseperio\avatar\Module',
+'adminPermission' => 'admin',
+]
+]
+```
 
+Now place the included widget where you want to display the avatar.
+
+```php
+
+
+<?= \eseperio\avatar\widgets\Avatar::widget([
+'avatarId' => Yii::$app->user->id
+]) ?>
+
+
+```
+
+##### Advanced configuration
+
+|Param|Default|Description|
+|-----|-------|-----------|
+|userComponent|`'user'`|  component to be used when generating avatar id. Ignored if $avatarFilename is a closure|
+|defaultImage|`false`|array the path to default image|
+|createDirectories|`true`|  whether create the target directories if they do not exists.|
+|thumbWidth|`250`|  size of thumbnail size|
+|thumbHeight|`250`|  size of thumbnail size|
+|outputFormat|`2` (jpeg)| Format for generated images
+|keepOriginal|`true`|  whether keep the original uploaded file|
+|originalSuffix|`'or'`|  suffix to be appended to original files. If keep original enabled|
+|uploadDir|`'@app/uploads'`|  directory to store thumbs generated without trailing slash. You can set a non web visible folder and get the pictures via link to `['/avatar/default/picture','id'=> $id ]`.|
+|thumbsDir|`'@app/images/thumbs'`|  directory where the files will be uploaded without trailing slash|
+|attributeName|`'image'`|  name of the attribute to be used on forms|
+|imageValidator|see code|  name of the attribute to be used on forms validator to be used for image uploaded|
+|mimeTypes|see code| list of allowed mimetypes|
+|glue|`'_'`|  to be used when joining avatar name parts|
+|adminPermission|`null`|  users with this permissions will be able to update avatars from other users.|
 ## Events
 
 There are available some events.

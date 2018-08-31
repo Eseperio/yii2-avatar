@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\FileHelper;
 use yii\imagine\Image;
 use yii\validators\ImageValidator;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
@@ -40,7 +41,7 @@ class AvatarController extends \yii\web\Controller
                 'rules' => [
                     [
                         'allow' => 'true',
-                        'actions' => ['upload'],
+                        'actions' => ['upload', 'delete'],
                         'roles' => ['@']
                     ],
                     [
@@ -64,17 +65,27 @@ class AvatarController extends \yii\web\Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
         $response = ['success' => true];
 
+        $ext = $module->getExtension();
         $filename = $module->getAvatarFileName($targetId);
         $originalFilename = $module->getAvatarFileName($targetId, $module->originalSuffix);
         $uploadDir = Yii::getAlias($module->uploadDir);
         $thumbDir = Yii::getAlias($module->thumbsDir);
-        if ($module->validatePath($uploadDir, $filename)) {
+        $DS = DIRECTORY_SEPARATOR;
+        $originalPath = $uploadDir . $DS . $originalFilename . $ext;
+        $thumbPath = $thumbDir . $DS . $filename . $ext;
+
+        if ($module->validatePath($uploadDir, $originalPath)) {
+
             try {
-                if (file_exists($thumbDir . DIRECTORY_SEPARATOR . $filename)) {
-                    unlink($filename);
+                if (file_exists($thumbPath)) {
+                    unlink($thumbPath);
+                } else {
+                    die($thumbPath);
+
                 }
-                if (file_exists($thumbDir . DIRECTORY_SEPARATOR . $originalFilename)) {
-                    unlink($filename);
+                if (file_exists($originalPath)) {
+                    unlink($originalPath);
+
                 }
 
             } catch (\Throwable $e) {
@@ -82,6 +93,8 @@ class AvatarController extends \yii\web\Controller
                 $response['error'] = YII_DEBUG ? $e->getMessage() : $errorMsg;
             }
 
+        } else {
+            throw new ForbiddenHttpException();
         }
 
         return $response;
@@ -117,8 +130,8 @@ class AvatarController extends \yii\web\Controller
                 }
                 $ext = $module->getExtension();
                 $originalFullPath = $uploadDir . DIRECTORY_SEPARATOR . $newFilename . $ext;
-                if (!$module->validatePath($uploadDir, $originalFullPath) && !$image->saveAs($originalFullPath)) {
-                    throw new Exception('Save original image failed');
+                if (!($module->validatePath($uploadDir, $originalFullPath) && $image->saveAs($originalFullPath))) {
+                    throw new Exception('Save image failed');
                 }
 
                 $this->afterUpload($newFilename, $response);

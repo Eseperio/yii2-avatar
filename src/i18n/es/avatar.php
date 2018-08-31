@@ -17,6 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'An error ocurred deleting your file' => 'Ocurrió un error al borrar su avatar',
+    'Remove' => 'Quitar',
+    'Remove avatar permanently? This can not be undone.' => 'Quitar el avatar permanentemente?',
     'A problem ocurred uploading your picture. Contact administrator' => 'Ocurrió un problema al cargar su imagen. Contacte por favor con el administrador',
     'Change' => 'Cambiar',
 ];

@@ -5,6 +5,9 @@
         let defaults = {
             url: '/',
             attributeName: 'avatar',
+            i18n: {
+                deleteMsg: 'Are you sure you want to remove the avatar?'
+            }
         };
 
         let settings = $.extend({}, defaults, options);
@@ -35,22 +38,30 @@
                 let self = this;
 
                 this._el.on('change', 'input[type="file"]', function (e) {
-                    self.callback(e)
+                    self.callback(e, 'update')
                 });
+                this._el.on('click', '.remove-avatar', function (e) {
+                    if (confirm(settings.i18n.deleteMsg))
+                        self.callback(e, 'delete')
+                });
+
+
             },
-            callback: function (e) {
+            callback: function (e, action) {
                 console.log(this);
                 let self = this;
                 let o = $(e.currentTarget);
                 console.log(o);
                 let formData = new FormData();
-                formData.append(settings.attributeName, o[0].files[0]);
+                if (action == 'update') {
+                    formData.append(settings.attributeName, o[0].files[0]);
+                }
                 if (settings.avatarId) {
                     formData.append("avatarId", settings.avatarId);
                 }
 
                 $.ajax({
-                    url: settings.url,
+                    url: settings[action],
                     data: formData,
                     type: 'POST',
                     contentType: false,

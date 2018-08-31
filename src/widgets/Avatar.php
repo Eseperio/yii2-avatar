@@ -49,8 +49,8 @@ class Avatar extends \yii\base\Widget
             'id' => $this->id,
             'avatarFile' => $this->module->getAvatarFileName($this->avatarId),
             'imageOptions' => $this->imageOptions,
-            'canUpdate'=> $this->module->canUpdate($this->avatarId),
-            'mimeTypes'=> $this->module->mimeTypes
+            'canUpdate' => $this->module->canUpdate($this->avatarId),
+            'mimeTypes' => $this->module->mimeTypes
 
         ]);
     }
@@ -60,7 +60,12 @@ class Avatar extends \yii\base\Widget
         AvatarAsset::register($this->view);
         $config = [
             'attributeName' => $this->attributeName,
-            'url' => Url::to(['/avatar/avatar/upload'])
+            'update' => Url::to(['/avatar/avatar/upload']),
+            'delete' => Url::to(['/avatar/avatar/delete']),
+            'i18n'=>[
+                'deleteMsg'=>\Yii::t('avatar','Remove avatar permanently? This can not be undone.')
+            ]
+
         ];
 
         if ($this->module->canUpdate($this->avatarId)) {

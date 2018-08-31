@@ -4,7 +4,6 @@ namespace eseperio\avatar;
 
 use Yii;
 use yii\helpers\ArrayHelper;
-use yii\helpers\StringHelper;
 use yii\i18n\PhpMessageSource;
 
 class Module extends \yii\base\Module
@@ -179,12 +178,11 @@ class Module extends \yii\base\Module
      */
     public function validatePath($needle, $haystack)
     {
-        $realpathHaystack = realpath($haystack);
+        $realpathHaystack = realpath(pathinfo($haystack,PATHINFO_DIRNAME));
         $realpathNeedle = realpath($needle);
-        if (StringHelper::startsWith($realpathHaystack, $realpathNeedle)) {
-            $diff = substr($haystack, strlen($needle));
-            return !strpbrk($diff, '/\\');
-        }
+
+        if ($realpathNeedle === $realpathHaystack)
+            return true;
 
         return false;
     }
