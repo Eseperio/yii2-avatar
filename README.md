@@ -1,4 +1,4 @@
-# yii2-avatar
+# yii2 avatar
 **0.0.1 ALPHA**
 
 Module to upload custom avatar picture

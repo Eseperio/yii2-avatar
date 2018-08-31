@@ -7,10 +7,26 @@
     "php": ">=7.1.0",
     "yiisoft/yii2-imagine": "2.1.1"
   },
+  "keywords": [
+    "avatar",
+    "image",
+    "profile",
+    "yii 2",
+    "yii framework",
+    "user",
+    "picture",
+    "account",
+    "backend",
+    "yii2-user",
+    "yii2 user",
+    "yii2 usuario",
+  ],
   "authors": [
     {
       "name": "E.Alamo",
-      "email": "erosdelalamo@gmail.com"
+      "email": "erosdelalamo@gmail.com",
+      "homepage": "http://xenonpublicidad.com"
+
     }
   ],
   "minimum-stability": "stable",
