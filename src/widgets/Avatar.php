@@ -43,7 +43,7 @@ class Avatar extends \yii\base\Widget
         AvatarAsset::register($this->view);
         $config = Json::htmlEncode([
             'attributeName' => $this->attributeName,
-            'url' => Url::to(['/avatar/default/upload'])
+            'url' => Url::to(['/avatar/avatar/upload'])
         ]);
         $this->view->registerJs(<<<JS
         $("#{$this->id}").yii2avatar($config);

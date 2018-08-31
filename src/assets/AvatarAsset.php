@@ -11,7 +11,7 @@ class AvatarAsset extends AssetBundle
     public $sourcePath = __DIR__ . "/dist";
 
     public $js = [
-        'js/change-avatar.js'
+        'js/avatar.js'
     ];
 
     public $css = [

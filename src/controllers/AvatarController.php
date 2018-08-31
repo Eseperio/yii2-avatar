@@ -18,8 +18,10 @@ use yii\web\UploadedFile;
  * @package eseperio\avatar\controllers
  * @property Module $module
  */
-class DefaultController extends \yii\web\Controller
+class AvatarController extends \yii\web\Controller
 {
+
+
     public function behaviors()
     {
 
@@ -64,7 +66,7 @@ class DefaultController extends \yii\web\Controller
             ]);
             if ($validator->validate($image, $error)) {
                 try {
-                    $newFilename = $this->getNewFilename();
+                    $newFilename = $module->getAvatarFileName($module->originalSuffix);
                     $uploadDir = Yii::getAlias($module->uploadDir);
                     $thumbDir = Yii::getAlias($module->thumbsDir);
 
@@ -72,10 +74,11 @@ class DefaultController extends \yii\web\Controller
                         FileHelper::createDirectory($uploadDir);
                         FileHelper::createDirectory($thumbDir);
                     }
-                    $ext = $module->outputFormat == Module::FORMAT_JPG ? '.jpg' : '.png';
+                    $ext = $module->getExtension();
                     $image->saveAs($uploadDir . DIRECTORY_SEPARATOR . $newFilename . $ext);
                     $thumbInstance = Image::thumbnail($newFilename, $module->thumbWidth, $module->thumbHeight);
-                    $thumbInstance->save($thumbDir . DIRECTORY_SEPARATOR . Yii::$app->user->id . $ext);
+                    $thumbFileName = $module->getAvatarFileName();
+                    $thumbInstance->save($thumbDir . DIRECTORY_SEPARATOR . $thumbFileName . $ext);
                     $response['success'] = true;
                 } catch (\Throwable $e) {
                     $errorMsg = Yii::t('avatar', 'A problem ocurred uploading your picture. Contact administrator');
@@ -91,15 +94,6 @@ class DefaultController extends \yii\web\Controller
         return $response;
     }
 
-    public function getNewFilename()
-    {
-        $name = [Yii::$app->user->id];
-        if (!empty($this->module->originalSuffix))
-            $name[] = $this->module->originalSuffix;
-
-        return implode('_', $name);
-    }
-
     /**
      * Render the selected avatar, even if it is in a protected folder.
      * @param $id integer
@@ -111,7 +105,7 @@ class DefaultController extends \yii\web\Controller
         $module = $this->module;
         $path = Yii::getAlias($module->thumbsDir) . DIRECTORY_SEPARATOR;
         Yii::$app->response->format = Response::FORMAT_RAW;
-        $ext = $module->outputFormat == Module::FORMAT_JPG ? '.jpg' : '.png';
+        $ext = $module->getExtension();
         $filename = $path . (int)$id . $ext;
         if (file_exists($filename)) {
             switch ($module->outputFormat) {

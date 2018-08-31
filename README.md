@@ -8,7 +8,18 @@ The intention of this library is add the ability to upload a profile picture via
 It must not be dependent from another user management library.
 
 
+
 ## Usage
+
+
+## Events
+
+There are available some events.
+
+| Event | Description |
+|-------|-------------|
+|
+
 
 ## JqueryPlugin
 
@@ -25,3 +36,4 @@ and have access to all the params of the parent function. See code to know more.
 |afterUpload|Triggered when ajax response is full ok (status code and server response)|
 |onFail|Triggered when status code is 200 but server response is not ok|
 |onAjaxFail|Triggered when communication with server fails|
+
