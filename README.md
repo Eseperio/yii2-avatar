@@ -15,10 +15,10 @@ It must not be dependent from another user management library.
 Add the module to your configuration like follows:
 ```php
 'modules' => [
-'avatar' => [
-'class' => 'eseperio\avatar\Module',
-'adminPermission' => 'admin',
-]
+    'avatar' => [
+    'class' => 'eseperio\avatar\Module',
+    'adminPermission' => 'admin',
+    ]
 ]
 ```
 
@@ -38,6 +38,7 @@ Now place the included widget where you want to display the avatar.
 
 |Param|Default|Description|
 |-----|-------|-----------|
+|$avatarFileName|null|The name to be used on generated files. If `null` then id property from `userComponent` will be used. If it is a string then will be considered like a route to a property within `userComponent`. If can be also a closure or a reference to a class method. Signature of method must be `function($id, $module){}`. See source code for more information.|
 |userComponent|`'user'`|  component to be used when generating avatar id. Ignored if $avatarFilename is a closure|
 |defaultImage|`false`|array the path to default image|
 |createDirectories|`true`|  whether create the target directories if they do not exists.|

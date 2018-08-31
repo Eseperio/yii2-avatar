@@ -146,6 +146,7 @@ class AvatarController extends \yii\web\Controller
             }
 
         } else {
+            $response['success'] = false;
             $response['error'] = $error;
         }
 
