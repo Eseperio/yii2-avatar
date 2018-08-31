@@ -39,6 +39,9 @@
                     console.log(o);
                     let formData = new FormData();
                     formData.append(settings.attributeName, o[0].files[0]);
+                    if (settings.avatarId) {
+                        formData.append("avatarId", settings.avatarId);
+                    }
                     $.ajax({
                         url: settings.url,
                         data: formData,
@@ -53,13 +56,16 @@
                     }).done(function (data, textStatus, jqXHR) {
                         if (data.success) {
                             if (self.trigger(AFTER_UPLOAD, data, textStatus, jqXHR)) {
-                                let img = $("#avatar-image"),
-                                    src = img.attr('src'),
-                                    newSrc = src.split("?")[0];
+                                let img = self.get('.avatar-image'),
+                                    src = img.attr('src');
+                                let glue = "?";
+                                if (src.indexOf('?')) {
+                                    glue = "&";
+                                }
+                                let newSrc = src + glue + Math.random();
+
                                 img.attr('src', newSrc + '?' + Math.random());
                             }
-
-
                         } else {
                             if (self.trigger(FAIL, data, textStatus, jqXHR)) {
                                 alert(data.error);
