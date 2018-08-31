@@ -1,7 +1,8 @@
 # yii2 avatar
 **0.0.1 ALPHA**
 
-Module to upload custom avatar picture
+Allows upload of a custom avatar without dependency on any extension rather than yii2.
+Includes a widget to manage upload by users and management by admins.
 
 The intention of this library is add the ability to upload a profile picture via a simple widget.
 
