@@ -31,7 +31,8 @@ class AvatarController extends \yii\web\Controller
             'verb' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'upload' => ['POST']
+                    'upload' => ['POST'],
+                    'delete' => ['POST']
                 ]
             ],
             'access' => [
@@ -53,6 +54,40 @@ class AvatarController extends \yii\web\Controller
         ];
     }
 
+    public function actionDelete()
+    {
+        $module = $this->module;
+        $targetId = null;
+        if (Yii::$app->user->can($module->adminPermission)) {
+            $targetId = Yii::$app->request->post('avatarId');
+        }
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $response = ['success' => true];
+
+        $filename = $module->getAvatarFileName($targetId);
+        $originalFilename = $module->getAvatarFileName($targetId, $module->originalSuffix);
+        $uploadDir = Yii::getAlias($module->uploadDir);
+        $thumbDir = Yii::getAlias($module->thumbsDir);
+        if ($module->validatePath($uploadDir, $filename)) {
+            try {
+                if (file_exists($thumbDir . DIRECTORY_SEPARATOR . $filename)) {
+                    unlink($filename);
+                }
+                if (file_exists($thumbDir . DIRECTORY_SEPARATOR . $originalFilename)) {
+                    unlink($filename);
+                }
+
+            } catch (\Throwable $e) {
+                $errorMsg = Yii::t('avatar', 'An error ocurred deleting your file');
+                $response['error'] = YII_DEBUG ? $e->getMessage() : $errorMsg;
+            }
+
+        }
+
+        return $response;
+
+    }
+
     public function actionUpload()
     {
         $module = $this->module;
@@ -63,44 +98,42 @@ class AvatarController extends \yii\web\Controller
 
         Yii::$app->response->format = Response::FORMAT_JSON;
         $response = ['success' => true];
-        if (Yii::$app->request->isPost) {
-            $image = UploadedFile::getInstanceByName($module->attributeName);
-            $validator = new ImageValidator([
-                'mimeTypes' => $module->mimeTypes,
-                'maxWidth' => 3000,
-                'maxHeight' => 3000,
-                'skipOnEmpty' => true,
-            ]);
-            if ($validator->validate($image, $error)) {
-                try {
-                    $newFilename = $module->getAvatarFileName($targetId, $module->originalSuffix);
-                    $uploadDir = Yii::getAlias($module->uploadDir);
-                    $thumbDir = Yii::getAlias($module->thumbsDir);
+        $image = UploadedFile::getInstanceByName($module->attributeName);
+        $validator = new ImageValidator([
+            'mimeTypes' => $module->mimeTypes,
+            'maxWidth' => 3000,
+            'maxHeight' => 3000,
+            'skipOnEmpty' => true,
+        ]);
+        if ($validator->validate($image, $error)) {
+            try {
+                $newFilename = $module->getAvatarFileName($targetId, $module->originalSuffix);
+                $uploadDir = Yii::getAlias($module->uploadDir);
+                $thumbDir = Yii::getAlias($module->thumbsDir);
 
-                    if ($module->createDirectories) {
-                        FileHelper::createDirectory($uploadDir);
-                        FileHelper::createDirectory($thumbDir);
-                    }
-                    $ext = $module->getExtension();
-                    $originalFullPath = $uploadDir . DIRECTORY_SEPARATOR . $newFilename . $ext;
-                    if (!$image->saveAs($originalFullPath)) {
-                        throw new Exception('Save original image failed');
-                    }
-
-                    $this->afterUpload($newFilename, $response);
-
-                    $thumbInstance = Image::thumbnail($originalFullPath, $module->thumbWidth, $module->thumbHeight);
-                    $thumbFileName = $module->getAvatarFileName($targetId);
-                    $thumbInstance->save($thumbDir . DIRECTORY_SEPARATOR . $thumbFileName . $ext);
-                    $response['success'] &= true;
-                } catch (\Throwable $e) {
-                    $errorMsg = Yii::t('avatar', 'A problem ocurred uploading your picture. Contact administrator');
-                    $response['error'] = YII_DEBUG ? $e->getMessage() : $errorMsg;
+                if ($module->createDirectories) {
+                    FileHelper::createDirectory($uploadDir);
+                    FileHelper::createDirectory($thumbDir);
+                }
+                $ext = $module->getExtension();
+                $originalFullPath = $uploadDir . DIRECTORY_SEPARATOR . $newFilename . $ext;
+                if (!$module->validatePath($uploadDir, $originalFullPath) && !$image->saveAs($originalFullPath)) {
+                    throw new Exception('Save original image failed');
                 }
 
-            } else {
-                $response['error'] = $error;
+                $this->afterUpload($newFilename, $response);
+
+                $thumbInstance = Image::thumbnail($originalFullPath, $module->thumbWidth, $module->thumbHeight);
+                $thumbFileName = $module->getAvatarFileName($targetId);
+                $thumbInstance->save($thumbDir . DIRECTORY_SEPARATOR . $thumbFileName . $ext);
+                $response['success'] &= true;
+            } catch (\Throwable $e) {
+                $errorMsg = Yii::t('avatar', 'A problem ocurred uploading your picture. Contact administrator');
+                $response['error'] = YII_DEBUG ? $e->getMessage() : $errorMsg;
             }
+
+        } else {
+            $response['error'] = $error;
         }
 
 

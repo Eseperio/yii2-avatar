@@ -33,6 +33,25 @@
     }
 
   }
+
+  %btn-aspect {
+    cursor: pointer;
+    display: inline-block;
+    background-color: lightgray;
+    padding: 6px 8px;
+    border-radius: 16px;
+    box-shadow: 0px 12px 10px -10px rgba(black, .3);
+  }
+  .remove-avatar {
+    background-color: red;
+    @extend %btn-aspect;
+    color: white;
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
   input[type="file"]:not(.external) {
     width: 0.1px;
     height: 0.1px;
@@ -41,12 +60,8 @@
     position: absolute;
     z-index: -1;
     + label {
-      cursor: pointer;
-      display: inline-block;
-      background-color: lightgray;
-      padding: 4px 8px;
-      border-radius: 16px;
-      box-shadow: 0px 12px 10px -10px rgba(black, .3);
+      @extend %btn-aspect;
+      color:white;
     }
     &:focus + label,
     + label:hover {

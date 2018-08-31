@@ -26,6 +26,12 @@ use yii\helpers\Url;
         <div class="avatar-loader">
             <input id="av-input-<?= $id ?>" type="file" accept="<?= implode(',', $mimeTypes) ?>"/>
             <label for="av-input-<?= $id ?>"><span>
-        <?= Yii::t('avatar', 'Change') ?></span></label></div>
+        <?= Yii::t('avatar', 'Change') ?></span></label>
+
+        </div>
+        <span class="remove-avatar" title="<?= Yii::t('avatar','Remove') ?>">
+X
+        </span>
+
     <?php endif; ?>
 </div>
