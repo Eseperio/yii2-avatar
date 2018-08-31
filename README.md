@@ -18,7 +18,7 @@ There are available some events.
 
 | Event | Description |
 |-------|-------------|
-|
+|`UploadEvent::EVENT_AFTER_UPLOAD`| Triggered just after saving original image. Use this event to generate thumbnails in other sizes.
 
 
 ## JqueryPlugin

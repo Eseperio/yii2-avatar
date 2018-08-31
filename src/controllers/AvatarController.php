@@ -2,6 +2,7 @@
 
 namespace eseperio\avatar\controllers;
 
+use eseperio\avatar\events\UploadEvent;
 use eseperio\avatar\Module;
 use Yii;
 use yii\base\Exception;
@@ -22,7 +23,6 @@ use yii\web\UploadedFile;
 class AvatarController extends \yii\web\Controller
 {
 
-    const EVENT_AFTER_UPLOAD = 'avatarAfterUpload';
 
     public function behaviors()
     {
@@ -62,7 +62,7 @@ class AvatarController extends \yii\web\Controller
         }
 
         Yii::$app->response->format = Response::FORMAT_JSON;
-        $response = ['success' => false];
+        $response = ['success' => true];
         if (Yii::$app->request->isPost) {
             $image = UploadedFile::getInstanceByName($module->attributeName);
             $validator = new ImageValidator([
@@ -87,11 +87,12 @@ class AvatarController extends \yii\web\Controller
                         throw new Exception('Save original image failed');
                     }
 
-                    $this->trigger(self::EVENT_AFTER_UPLOAD);
+                    $this->afterUpload($newFilename, $response);
+
                     $thumbInstance = Image::thumbnail($originalFullPath, $module->thumbWidth, $module->thumbHeight);
                     $thumbFileName = $module->getAvatarFileName($targetId);
                     $thumbInstance->save($thumbDir . DIRECTORY_SEPARATOR . $thumbFileName . $ext);
-                    $response['success'] = true;
+                    $response['success'] &= true;
                 } catch (\Throwable $e) {
                     $errorMsg = Yii::t('avatar', 'A problem ocurred uploading your picture. Contact administrator');
                     $response['error'] = YII_DEBUG ? $e->getMessage() : $errorMsg;
@@ -104,6 +105,13 @@ class AvatarController extends \yii\web\Controller
 
 
         return $response;
+    }
+
+    public function afterUpload($fileName, &$responseData)
+    {
+        $event = Yii::createObject(UploadEvent::class, [$fileName, $responseData]);
+        $this->trigger(UploadEvent::EVENT_AFTER_UPLOAD, $event);
+        $responseData = $event->response;
     }
 
     /**
