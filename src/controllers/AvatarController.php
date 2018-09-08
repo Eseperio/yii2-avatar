@@ -55,11 +55,12 @@ class AvatarController extends \yii\web\Controller
         ];
     }
 
+
     public function actionDelete()
     {
         $module = $this->module;
         $targetId = null;
-        if (Yii::$app->user->can($module->adminPermission)) {
+        if ($this->canManage()) {
             $targetId = Yii::$app->request->post('avatarId');
         }
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -101,11 +102,26 @@ class AvatarController extends \yii\web\Controller
 
     }
 
+    /**
+     * @param $module
+     * @return mixed
+     */
+    protected function canManage()
+    {
+        $module = $this->module;
+        $adminUsers = $module->adminUsers;
+        if (!empty($module->adminPermission) && Yii::$app->user->can($module->adminPermission)
+            || !empty($adminUsers)
+            && in_array(Yii::$app->user->username, is_array($adminUsers) ? $adminUsers : [$adminUsers]))
+
+            return Yii::$app->user->can($module->adminPermission);
+    }
+
     public function actionUpload()
     {
         $module = $this->module;
         $targetId = null;
-        if (Yii::$app->user->can($module->adminPermission)) {
+        if ($this->canManage()) {
             $targetId = Yii::$app->request->post('avatarId');
         }
 
