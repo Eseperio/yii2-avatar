@@ -22,6 +22,10 @@
   opacity: .5;
 }
 
+.avatar-box:hover .remove-avatar {
+  display: block;
+}
+
 .avatar-box:hover .avatar-loader {
   bottom: 50%;
   transform: translateY(50%) translateX(-50%) scale(1);
@@ -47,7 +51,7 @@
 .avatar-box .remove-avatar {
   background-color: red;
   color: white;
-  display: block;
+  display: none;
   position: absolute;
   top: 10px;
   right: 10px;
