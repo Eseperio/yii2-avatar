@@ -159,6 +159,7 @@ class AvatarController extends \yii\web\Controller
             } catch (\Throwable $e) {
                 $errorMsg = Yii::t('avatar', 'A problem ocurred uploading your picture. Contact administrator');
                 $response['error'] = YII_DEBUG ? $e->getMessage() : $errorMsg;
+                $response['success'] = false;
             }
 
         } else {
