@@ -59,11 +59,12 @@ class AvatarController extends \yii\web\Controller
     public function actionDelete()
     {
         $module = $this->module;
-        $targetId = null;
-        if ($this->canManage()) {
-            $targetId = Yii::$app->request->post('avatarId');
-        }
         Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $targetId = Yii::$app->request->post('avatarId');
+        if (!$module->canUpdate($targetId))
+            return ['success' => true, 'error' => Yii::t('xenon', 'Cannot delete this avatar')];
+
         $response = ['success' => true];
 
         $ext = $module->getExtension();
@@ -103,29 +104,19 @@ class AvatarController extends \yii\web\Controller
     }
 
     /**
-     * @param $module
-     * @return mixed
+     * @return array
      */
-    protected function canManage()
-    {
-        $module = $this->module;
-        $adminUsers = $module->adminUsers;
-        if (!empty($module->adminPermission) && Yii::$app->user->can($module->adminPermission)
-            || !empty($adminUsers)
-            && in_array(Yii::$app->user->username, is_array($adminUsers) ? $adminUsers : [$adminUsers]))
-
-            return Yii::$app->user->can($module->adminPermission);
-    }
-
     public function actionUpload()
     {
         $module = $this->module;
         $targetId = null;
-        if ($this->canManage()) {
-            $targetId = Yii::$app->request->post('avatarId');
-        }
-
+        $targetId = Yii::$app->request->post('avatarId');
         Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!$module->canUpdate($targetId))
+            return ['success' => false, 'error' => Yii::t('xenon', 'Cannot update htis profile.')];
+
+
         $response = ['success' => true];
         $image = UploadedFile::getInstanceByName($module->attributeName);
         $validator = new ImageValidator([

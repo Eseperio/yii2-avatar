@@ -1,5 +1,5 @@
 # yii2 avatar
-**0.0.1 ALPHA**
+**1.0.0 ALPHA**
 
 Allows upload of a custom avatar without dependency on any extension rather than yii2.
 Includes a widget to manage upload by users and management by admins.
